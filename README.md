@@ -12,10 +12,11 @@ All you need is a copy of PD and the "pd-image-to-structs.jar" file from this gi
 
 ![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-gui.PNG?raw=true)
 
+* Double click on "pd-imagea-to-structs.jar" to launch it
 * Click on the "Path the image file" button and select the file you want to convert. 
 * Then click on the "Path to pd file" and choose where you want to save the abstraction. 
-* Choose the pixel scale. IE: 1 is normal size, 2 would double the image size, ect. Note that this cannot be less than 1.
-* Click "Convert!" and wait until the log says that it's done. (It should probably happen almost instantly.)
+* Choose the pixel size. IE: 1 is normal size, 2 would double the image size, ect. Note that this cannot be less than 1.
+* Click "Convert!" and wait until the log says that it's done. (It will probably happen almost instantly)
 
 After the converter has generated the file, just open it in a pd patch like you would any other abstraction. IE: create a new object that is the name of the file. It already sets it to graph-on-parent, hides the name/arguments, and scales the canvas to the size of the image. 
 
