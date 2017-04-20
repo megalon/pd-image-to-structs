@@ -2,13 +2,13 @@
 
 ![](https://raw.githubusercontent.com/megalon/pd-image-to-structs/master/images/image-to-structs-demo1.gif)
 
-After making my last tutorial I was wondering: "Would it be possible to display an image file using only structs?" 
+After making my [GUI tutorial](https://github.com/megalon/pd-gui-examples) I was wondering: "Would it be possible to display an image file using only structs?" 
 
 It turns out, not only is it possible, it actually works pretty well!
 
 ## What do I need to do this?
 
-All you need is a copy of PD, and the "pd-image-to-structs.jar" file from this github repo. The jar file is an external tool I wrote in Java that allows you to easily create a custom abstraction whose sole job is to display whatever image you convert. 
+All you need is a copy of PD and the "pd-image-to-structs.jar" file from this github repo. The jar file is an external tool I wrote in Java that allows you to easily create a custom abstraction whose sole job is to display whatever image you convert. 
 
 ![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-gui.PNG?raw=true)
 
