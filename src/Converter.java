@@ -53,25 +53,27 @@ public class Converter {
 					+ "#X obj 853 410 pointer;\n"
 					+ "#N canvas 1266 536 546 174 \\$0-template 0;");
 			
+			int rgb, red, green, blue;
+			
 			// Loop through all of the pixels in our image.
 			for(int x = 0; x < w; ++x){
 				for(int y = 0; y < h; ++y){
 					
-					// Convert integer RGB to a value between 0 and 9  
-					// (16777216 / 9) = 1864135.1111111
-					int rgb = img.getRGB(x, y);
+					// Get the rgb color of the current pixel
+					rgb = img.getRGB(x, y);
 
 					// Get individual R G B values. 
 					// They are typically 0 - 255, so we convert to 0 - 9
-					int red = ((rgb & 0xFF) * 9) / 256;
-					int green = (((rgb >> 8) & 0xFF) * 9) / 256;
-					int blue = (((rgb >> 16) & 0xFF) * 9) / 256;
+					red = ((rgb & 0xFF) * 9) / 256;
+					green = (((rgb >> 8) & 0xFF) * 9) / 256;
+					blue = (((rgb >> 16) & 0xFF) * 9) / 256;
 					
-					// With PD structs the color needs to be a 3 digit value. 
+					// With PD structs the color needs to be a 3 digit value.
+					// PD uses Blue Green Red notation
 					// For example, 100% red would be:
-					// 		R G B 
-					// 		9 0 0
-					rgb = red + green * 10 + blue * 100;
+					// 		B G R 
+					// 		0 0 9
+					rgb = blue * 100 + green * 10 + red;
 					
 					writer.println("#X obj " + x*tilesize + " " + y*tilesize + " filledpolygon " + rgb + " " + rgb + " " + 0 + " "
 								+ x*tilesize + " "
