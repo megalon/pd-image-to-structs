@@ -2,19 +2,51 @@
 
 ![](https://raw.githubusercontent.com/megalon/pd-image-to-structs/master/images/image-to-structs-demo1.gif)
 
-After making my last tutorial I was wondering: "Would it be possible to display an image within the regular pure data patch window using only structs?" 
+After making my last tutorial I was wondering: "Would it be possible to display an image file using only structs?" 
 
 It turns out, not only is it possible, it actually works pretty well!
 
-## But... How?
+## What do I need to do this?
 
-Each pixel within the input image file is drawn as a square using the [drawpolygon] object. If we set the squares to be 1x1 pixel, we are essentially rendering the image onto the PD canvas!
+All you need is a copy of PD, and the "pd-image-to-structs.jar" file from this github repo. The jar file is an external tool I wrote in Java that allows you to easily create a custom abstraction whose sole job is to display whatever image you convert. 
+
+![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-gui.PNG?raw=true)
+
+* Click on the "Path the image file" button and select the file you want to convert. 
+* Then click on the "Path to pd file" and choose where you want to save the abstraction. 
+* Choose the pixel scale. IE: 1 is normal size, 2 would double the image size, ect. Note that this cannot be less than 1.
+* Click "Convert!" and wait until the log says that it's done. (It should probably happen almost instantly.)
+
+After the converter has generated the file, just open it in a pd patch like you would any other abstraction. IE: create a new object that is the name of the file. It already sets it to graph-on-parent, hides the name/arguments, and scales the canvas to the size of the image. 
+
+You can also just open the abstraction itself to check it out.
 
 ![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-abstraction.PNG?raw=true)
 
-I wrote an external tool in Java that allows you to easily create a custom abstraction whose sole job is to display whatever image you convert.
+## What size images can I use? 
 
-![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-gui.PNG?raw=true)
+**Any image bigger than about 150 X 150px will probably really lag the GUI.**
+Try and position the image where you want it before you enable it. If you want to edit anything within the GUI, it'd be best to disable the image, then reenable it when you're done.
+
+
+## Do the images have to be square?
+
+Nope. They can be as long or as tall as you want.
+
+
+## Other limitations?
+
+**PD will almost always crash if you try and close the file when the image is still visible.**
+Be sure to turn the image off before closing.
+
+**Structs have a limited set of colors. Compared to the normal 256^3 colors (16,777,216) for image files, structs only allow 10^3 colors (1000).**
+Here is an example of how an image might turn out when converted.
+
+![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-rainbow.png?raw=true)
+
+## But... How does it work?
+
+Each pixel within the input image file is drawn as a square using the [drawpolygon] object. If we set the squares to be 1x1 pixel, we are essentially rendering the image onto the PD canvas!
 
 pd files are saved as plain text, so all I had to do was create a pd patch that would draw a square using [filledpolygon], then figure out where in the pd file that filledpolygon object was.
 ```
@@ -79,15 +111,16 @@ for(int x = 0; x < w; ++x){
     // Get individual R G B values. 
     // Convert integer RGB to a value between 0 and 9  
     // They are typically 0 - 255, so we convert to 0 - 9
-    int red = ((rgb & 0xFF) * 9) / 256;
-    int green = (((rgb >> 8) & 0xFF) * 9) / 256;
-    int blue = (((rgb >> 16) & 0xFF) * 9) / 256;
+    red = ((rgb & 0xFF) * 9) / 256;
+    green = (((rgb >> 8) & 0xFF) * 9) / 256;
+    blue = (((rgb >> 16) & 0xFF) * 9) / 256;
 
     // With PD structs the color needs to be a 3 digit value. 
+    // For some reason structs use BGR notation
     // For example, 100% red would be:
-    // 		R G B 
-    // 		9 0 0
-    rgb = red + green * 10 + blue * 100;
+    // 		B G R 
+    // 		0 0 9
+    rgb = blue * 100 + green * 10 + red;
 
     writer.println("#X obj " + x*tilesize + " " + y*tilesize + " filledpolygon " + rgb + " " + rgb + " " + 0 + " "
           + x*tilesize + " "
@@ -105,11 +138,6 @@ for(int x = 0; x < w; ++x){
 }
 ```
 
-# Limitations?
-**Any image bigger than about 100 x 100px starts to really lag the GUI.** 
-Try and position the image where you want it before you enable it. If you want to edit anything within the GUI, it'd be best to disable the image, then reenable it when you're done.
-
-**PD will almost always crash if you try and close the file if the image is still visible.**
-Be sure to turn the image off before closing.
+___
 
 While this process isn't very practical for any reasonably sized images, it might be good for adding some pixel art to your PD patches!
