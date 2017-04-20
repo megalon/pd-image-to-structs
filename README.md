@@ -44,7 +44,7 @@ Here is an example of how an image might turn out when converted.
 
 ![](https://github.com/megalon/pd-image-to-structs/blob/master/images/example-rainbow.png?raw=true)
 
-## But... How does it work?
+## OK, but how does it work?
 
 Each pixel within the input image file is drawn as a square using the [drawpolygon] object. If we set the squares to be 1x1 pixel, we are essentially rendering the image onto the PD canvas!
 
